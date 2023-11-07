@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-500 text-white border-primary-500 hover:bg-primary-700 hover:border-primary-700;
+  }
+
+  .btn-outline.btn-primary {
+    @apply bg-transparent  text-primary-500 hover:bg-primary-500 hover:text-white hover:border-primary-500;
+  }
+}
+
+/* TRANSITIONS */
+.scale-enter-from,
+.scale-leave-to {
+  transform: scale(0);
+  opacity: 0;
+}
+
+.scale-enter-active,
+.scale-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.slide-left-enter-from,
+.slide-left-leave-to {
+  transform: translateX(50px);
+  opacity: 0;
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+
+/* SCROLLBAR */
+/* Set the width and color of the scrollbar track */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Set the background color of the scrollbar track */
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+/* Set the color and width of the scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background-color: #8f8f8f;
+  border-radius: 8px;
+}
+
+/* Set the hover effect for the scrollbar thumb */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #8f8f8f;
+}

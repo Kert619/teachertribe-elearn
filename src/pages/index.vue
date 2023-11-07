@@ -1,0 +1,74 @@
+<template>
+  <div>
+    <VeeForm
+      class="w-full max-w-md mx-auto m-10 shadow-normal p-5"
+      :validation-schema="schema"
+      @submit="handleSubmit"
+      v-slot="{ errors }"
+    >
+      <img src="~/assets/images/logo.png" width="200" class="mx-auto" />
+
+      <div class="mt-5">
+        <VTextInput
+          name="email"
+          placeholder="Enter your email"
+          type="email"
+          label="Email"
+          :error="errors.email"
+        />
+
+        <VTextInput
+          name="password"
+          placeholder="Enter your password"
+          type="password"
+          label="Password"
+          :error="errors.password"
+        />
+      </div>
+
+      <Alert
+        v-if="!!errorMessage"
+        class="mt-3 text-center"
+        :text="errorMessage"
+        variant="error"
+      />
+
+      <button class="btn btn-primary btn-block mt-3">
+        <span v-if="loading" class="loading loading-spinner loading-sm"></span>
+        Login
+      </button>
+    </VeeForm>
+  </div>
+</template>
+
+<script setup>
+definePageMeta({
+  layout: false,
+  middleware: ["logged-in"],
+});
+
+const authStore = useAuthStore();
+
+const loading = ref(false);
+const errorMessage = ref(null);
+
+const schema = {
+  email: "required|email",
+  password: "required",
+};
+
+async function handleSubmit(values) {
+  if (loading.value) return;
+  errorMessage.value = null;
+  loading.value = true;
+  const { error } = await authStore.login(values);
+  loading.value = false;
+  if (error.value) errorMessage.value = error.value.data.message;
+}
+
+watchEffect(() => {
+  if (authStore.user) {
+    return navigateTo("/activities", { replace: true });
+  }
+});
+</script>
