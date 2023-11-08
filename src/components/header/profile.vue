@@ -33,6 +33,5 @@ const authStore = useAuthStore();
 
 async function handleLogout() {
   await authStore.logout();
-  window.location.reload();
 }
 </script>

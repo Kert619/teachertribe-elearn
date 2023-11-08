@@ -63,6 +63,7 @@ async function handleSubmit(values) {
   loading.value = true;
   const { error } = await authStore.login(values);
   loading.value = false;
+
   if (error.value) errorMessage.value = error.value.data.message;
 }
 

@@ -3,6 +3,14 @@ export const useAuthStore = defineStore("auth", () => {
   const roles = ref([]);
   const permissions = ref([]);
   const levels_passed = ref([]);
+  const token = useCookie("token", { maxAge: 60 * 60 * 24 * 7 });
+
+  async function fetchUser() {
+    const { data, error } = await useApiFetch("/me");
+    if (!error.value) {
+      setUser(data.value);
+    }
+  }
 
   async function login(payload) {
     const login = await useApiFetch("/login", {
@@ -12,7 +20,7 @@ export const useAuthStore = defineStore("auth", () => {
 
     if (login.status.value === "success") {
       setUser(login.data.value);
-      setTokenCookie(login.data.value.token);
+      setToken(login.data.value.token);
     }
 
     return login;
@@ -30,13 +38,11 @@ export const useAuthStore = defineStore("auth", () => {
     levels_passed.value = data.levels_passed;
   }
 
-  function setTokenCookie(token) {
-    const tokenCookie = useCookie("token", { maxAge: 60 * 60 * 24 * 7 });
-    tokenCookie.value = token;
+  function setToken(val) {
+    token.value = val;
   }
 
-  function removeTokenCookie() {
-    const token = useCookie("token");
+  function removeToken() {
     token.value = null;
   }
 
@@ -47,7 +53,9 @@ export const useAuthStore = defineStore("auth", () => {
     roles.value = [];
     permissions.value = [];
     levels_passed.value = [];
-    removeTokenCookie();
+    token.value = null;
+    removeToken();
+    window.location.reload();
   }
 
   return {
@@ -55,6 +63,8 @@ export const useAuthStore = defineStore("auth", () => {
     roles,
     permissions,
     levels_passed,
+    token,
+    fetchUser,
     login,
     setUser,
     logout,

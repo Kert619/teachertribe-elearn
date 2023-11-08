@@ -1,8 +1,12 @@
 <template>
-  <Loading v-if="pending" />
-  <ErrorMessage v-else-if="error" :error-message="error.statusMessage" />
-  <div v-else v-for="phase in course.phases" :key="phase.id">
-    <CoursesPhase :phase="phase" @level-select="levelSelect" />
+  <div>
+    <Loading v-if="pending" />
+    <ErrorMessage v-else-if="error" :error-message="error.statusMessage" />
+    <div v-else>
+      <div v-for="phase in course.phases" :key="phase.id">
+        <CoursesPhase :phase="phase" @level-select="levelSelect" />
+      </div>
+    </div>
   </div>
 </template>
 
