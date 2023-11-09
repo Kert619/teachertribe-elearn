@@ -1,27 +1,22 @@
 version: "3.8"
 
 services:
-  app-nginx:
-    container_name: app-nginx
+  nginx:
+    container_name: nginx-app
+    image: teachertribe-elearn-nginx
     build:
       context: .
       dockerfile: ./dockerfiles/nginx.dockerfile
     ports:
       - "4000:80"
     depends_on:
-      - app-nuxt
-  app-nuxt:
-    container_name: app-nuxt
+      - nuxt
+  nuxt:
+    container_name: nuxt
+    image: teachertribe-elearn-nuxt
     build:
       context: .
       dockerfile: ./dockerfiles/nuxt.dockerfile
     volumes:
       - ./src:/app
       - /app/node_modules
-  app-npm:
-    container_name: app-npm
-    image: node:20.9.0-alpine3.18
-    working_dir: /app
-    volumes:
-      - ./src:/app
-    entrypoint: ["npm"]
