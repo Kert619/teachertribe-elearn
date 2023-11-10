@@ -1,8 +1,8 @@
-FROM node:20.9.0-alpine3.18 AS build
+FROM node:21.1.0-slim AS build
 
 WORKDIR /app
 
-COPY package.json .
+COPY .npmrc package-lock.json package.json ./
 
 RUN npm install
 
@@ -10,7 +10,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:20.9.0-alpine3.18 AS prod
+FROM node:21.1.0-slim AS prod
 
 WORKDIR /app
 

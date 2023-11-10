@@ -1,8 +1,8 @@
-FROM node:20.9.0-alpine3.18
+FROM node:21.1.0-slim
 
 WORKDIR /app
 
-COPY ./src/package.json .
+COPY src/.npmrc src/package-lock.json src/package.json ./
 
 RUN npm install
 

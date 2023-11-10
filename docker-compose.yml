@@ -20,3 +20,11 @@ services:
     volumes:
       - ./src:/app
       - /app/node_modules
+  npm:
+    container_name: npm
+    image: teachertribe-elearn-npm
+    build:
+      context: .
+      dockerfile: ./dockerfiles/npm.dockerfile
+    volumes:
+      - ./src:/app
