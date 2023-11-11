@@ -1,9 +1,9 @@
 version: "3.8"
 
 services:
-  nginx:
-    container_name: nginx-app
-    image: teachertribe-elearn-nginx
+  frontend-nginx:
+    container_name: frontend-nginx
+    image: teachertribe-elearn-frontend-nginx
     build:
       context: .
       dockerfile: ./dockerfiles/nginx.dockerfile
@@ -20,11 +20,12 @@ services:
     volumes:
       - ./src:/app
       - /app/node_modules
+    ports:
+      - "3000:3000"
   npm:
     container_name: npm
-    image: teachertribe-elearn-npm
-    build:
-      context: .
-      dockerfile: ./dockerfiles/npm.dockerfile
+    image: node:21.1.0-slim
+    working_dir: /app
     volumes:
       - ./src:/app
+    entrypoint: ["npm"]

@@ -16,27 +16,33 @@
         <div
           class="col-span-12 sm:col-span-3 h-full min-h-[150px] overflow-auto shadow-normal p-3"
         >
-          <LevelTestSidebar
-            class="h-full"
-            :activity="level.name"
-            :description="level.description"
-          />
+          <ClientOnly>
+            <LevelTestSidebar
+              class="h-full"
+              :activity="level.name"
+              :description="level.description"
+            />
+          </ClientOnly>
         </div>
         <div
           class="col-span-12 sm:col-span-6 h-full min-h-[300px] overflow-auto shadow-normal"
         >
-          <LevelTestEditor
-            v-model="code"
-            :read-only="isReadOnly"
-            :loading="loadingValidate"
-            @go-back="navigateTo(`/activities/${route.params.course}`)"
-            @submit-code="validateCode"
-          />
+          <ClientOnly>
+            <LevelTestEditor
+              v-model="code"
+              :read-only="isReadOnly"
+              :loading="loadingValidate"
+              @go-back="navigateTo(`/activities/${route.params.course}`)"
+              @submit-code="validateCode"
+            />
+          </ClientOnly>
         </div>
         <div
           class="col-span-12 sm:col-span-3 h-full min-h-[150px] overflow-auto shadow-normal p-3"
         >
-          <iframe :srcdoc="code" class="h-full w-full" sandbox></iframe>
+          <ClientOnly>
+            <iframe :srcdoc="code" class="h-full w-full" sandbox></iframe>
+          </ClientOnly>
         </div>
       </div>
     </div>
@@ -70,10 +76,10 @@ const { data: level, pending } = await levelStore.getLevel({
 
 if (process.server && !level.value) {
   throw createError({ statusCode: 404, statusMessage: "Activity not found" });
-} 
+}
 
-if(level.value){
-  code.value=level.value.initial_output
+if (level.value) {
+  code.value = level.value.initial_output;
 }
 
 watch(level, (newLevel) => {

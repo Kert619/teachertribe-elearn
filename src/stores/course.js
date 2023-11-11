@@ -6,7 +6,8 @@ export const useCourseStore = defineStore("course", () => {
     const coursesData = await useApiFetch("/courses", {
       lazy: true,
       key: "courses",
-      getCachedData: key => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+      getCachedData: (key) =>
+        nuxtApp.payload.data[key] || nuxtApp.static.data[key],
     });
 
     courses.value = coursesData.data.value;
@@ -20,8 +21,10 @@ export const useCourseStore = defineStore("course", () => {
       lazy: true,
       key: `course-${payload.course}`,
       query: payload,
-      getCachedData: key => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+      getCachedData: (key) =>
+        nuxtApp.payload.data[key] || nuxtApp.static.data[key],
     });
+
     return course;
   }
 

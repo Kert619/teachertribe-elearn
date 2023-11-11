@@ -3,7 +3,7 @@
     <h1 class="border-b pb-3 mb-3 font-semibold">
       {{ activity }}
     </h1>
-    <pre class="whitespace-pre-wrap">{{ description }}</pre>
+    <div class="whitespace-pre-wrap">{{ description }}</div>
   </div>
 </template>
 

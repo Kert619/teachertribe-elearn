@@ -6,7 +6,8 @@ export const useClassroomStore = defineStore("classroom", () => {
     const classroomsData = await useApiFetch("/classrooms", {
       lazy: true,
       key: "classrooms",
-      getCachedData: key => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+      getCachedData: (key) =>
+        nuxtApp.payload.data[key] || nuxtApp.static.data[key],
     });
 
     classrooms.value = classroomsData.data.value;
@@ -48,10 +49,12 @@ export const useClassroomStore = defineStore("classroom", () => {
 
   async function getClassroom(payload) {
     const nuxtApp = useNuxtApp();
-    const classroom = await useApiFetch(`/classrooms/get-by-name`, {
+    const classroom = await useApiFetch("/classrooms/get-by-name", {
       lazy: true,
       query: payload,
-      getCachedData: key => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+      key: `get-classroom-by-name-${payload.classroom}`,
+      getCachedData: (key) =>
+        nuxtApp.payload.data[key] || nuxtApp.static.data[key],
     });
 
     return classroom;

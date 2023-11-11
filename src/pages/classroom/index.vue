@@ -41,8 +41,6 @@ const courseStore = useCourseStore();
 
 const { titleToSlug } = useSlug();
 
-const assignCoursesPayload = ref({});
-
 const {
   data: classrooms,
   pending: pendingClassrooms,
