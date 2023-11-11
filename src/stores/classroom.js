@@ -52,7 +52,7 @@ export const useClassroomStore = defineStore("classroom", () => {
     const classroom = await useApiFetch("/classrooms/get-by-name", {
       lazy: true,
       query: payload,
-      key: `get-classroom-by-name-${payload.classroom}`,
+      key: `classroom-${payload.classroom}`,
       getCachedData: (key) =>
         nuxtApp.payload.data[key] || nuxtApp.static.data[key],
     });
