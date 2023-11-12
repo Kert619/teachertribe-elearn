@@ -20,8 +20,6 @@ services:
     volumes:
       - ./src:/app
       - /app/node_modules
-    ports:
-      - "3000:3000"
   npm:
     container_name: npm
     image: node:21.1.0-slim

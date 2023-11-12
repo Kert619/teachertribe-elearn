@@ -1,21 +1,26 @@
-FROM node:21.1.0-slim AS build
+# Source: https://nuxtjs.org/deployments/koyeb#dockerize-your-application
+FROM node:lts as builder
 
 WORKDIR /app
-
-COPY .npmrc package-lock.json package.json ./
-
-RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN yarn install \
+  --prefer-offline \
+  --frozen-lockfile \
+  --non-interactive \
+  --production=false
 
-FROM node:21.1.0-slim AS prod
+RUN yarn build
+
+FROM node:lts
 
 WORKDIR /app
 
-COPY --from=build /app .
+COPY --from=builder /app .
 
-EXPOSE 3000
+ENV HOST 0.0.0.0
+ENV PORT 8080
 
-CMD [ "node", ".output/server/index.mjs" ]
+# Source: https://nuxt.com/docs/getting-started/deployment#entry-point
+CMD ["node", ".output/server/index.mjs"]

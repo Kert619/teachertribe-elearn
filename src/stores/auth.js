@@ -55,7 +55,7 @@ export const useAuthStore = defineStore("auth", () => {
     levels_passed.value = [];
     token.value = null;
     removeToken();
-    window.location.reload();
+    if (process.client) window.location.reload();
   }
 
   return {

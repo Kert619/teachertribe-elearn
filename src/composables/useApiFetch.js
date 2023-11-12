@@ -12,9 +12,7 @@ export const useApiFetch = (request, options) => {
   }
 
   return useFetch(request, {
-    baseURL: process.server
-      ? config.public.apiBase
-      : "http://localhost:8000/api/v1",
+    baseURL: config.public.apiBase,
     method: "GET",
     watch: false,
     transform: (_data) => _data.data,
