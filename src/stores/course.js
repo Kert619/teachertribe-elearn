@@ -1,5 +1,6 @@
 export const useCourseStore = defineStore("course", () => {
   const courses = ref([]);
+  const refresh = ref(false);
 
   async function getCourses() {
     const nuxtApp = useNuxtApp();
@@ -21,12 +22,18 @@ export const useCourseStore = defineStore("course", () => {
       lazy: true,
       key: `course-${payload.course}`,
       query: payload,
-      getCachedData: (key) =>
-        nuxtApp.payload.data[key] || nuxtApp.static.data[key],
+      getCachedData: (key) => {
+        if (refresh.value) {
+          refresh.value = false;
+          return nuxtApp.static.data[key];
+        } else {
+          return nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+        }
+      },
     });
 
     return course;
   }
 
-  return { courses, getCourses, getCourse };
+  return { courses, refresh, getCourses, getCourse };
 });

@@ -1,7 +1,10 @@
 <template>
   <div>
     <Loading v-if="pending" />
-    <ErrorMessage v-else-if="error" :error-message="error.statusMessage" />
+    <ErrorMessage
+      v-else-if="error"
+      error-message="Sorry, something went wrong!"
+    />
     <div v-else>
       <div v-for="phase in course.phases" :key="phase.id">
         <CoursesPhase :phase="phase" @level-select="levelSelect" />
@@ -21,9 +24,9 @@ const {
   data: course,
   pending,
   error,
-} =  await courseStore.getCourse({
-      course: slugToTitle(route.params.course),
-    });
+} = await courseStore.getCourse({
+  course: slugToTitle(route.params.course),
+});
 
 if (process.server && !course.value) {
   throw createError({ statusCode: 404, statusMessage: "Course not found" });

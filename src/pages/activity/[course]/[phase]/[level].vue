@@ -60,6 +60,8 @@ definePageMeta({
 const route = useRoute();
 
 const levelStore = useLevelStore();
+const courseStore = useCourseStore();
+const authStore = useAuthStore();
 
 const { slugToTitle } = useSlug();
 
@@ -115,12 +117,13 @@ async function validateCode() {
 
   if (status.value === "success") {
     if (answer.value.is_correct) {
+      if (authStore.isStudent) courseStore.refresh = true;
       await Swal.fire(
         "Success!",
         "Congratulations, your answer is correct!",
         "success"
       );
-      navigateTo(`/activities/${route.params.course}`, { replace: true });
+      await navigateTo(`/activities/${route.params.course}`, { replace: true });
     } else {
       await Swal.fire("Error!", "Sorry, your answer is incorrect!", "error");
     }

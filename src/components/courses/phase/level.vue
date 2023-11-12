@@ -1,9 +1,21 @@
 <template>
   <button
-    class="btn btn-outline btn-primary btn-block no-animation rounded-none"
+    v-if="level.is_unlocked"
+    class="btn btn-primary btn-block no-animation rounded-none"
+    :class="{
+      'btn-outline': !authStore.isStudent || !level.is_passed,
+      '!btn-success': level.is_passed && authStore.isStudent,
+    }"
     @click="levelSelect"
   >
     {{ index + 1 }}
+  </button>
+
+  <button
+    v-else
+    class="btn btn-outline btn-primary btn-block no-animation rounded-none pointer-events-none"
+  >
+    <IconLock />
   </button>
 </template>
 

@@ -38,8 +38,6 @@ const props = defineProps({
   },
 });
 
-const authStore = useAuthStore();
-
 function levelSelect(level) {
   emits("level-select", props.phase, level);
 }

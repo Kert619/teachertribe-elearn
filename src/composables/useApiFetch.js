@@ -15,6 +15,7 @@ export const useApiFetch = (request, options) => {
     baseURL: config.public.apiBase,
     method: "GET",
     watch: false,
+    deep: false,
     transform: (_data) => _data.data,
     ...options,
     headers,

@@ -64,12 +64,10 @@ async function handleSubmit(values) {
   const { error } = await authStore.login(values);
   loading.value = false;
 
-  if (error.value) errorMessage.value = error.value.data.message;
-}
-
-watchEffect(() => {
-  if (authStore.user) {
-    return navigateTo("/activities", { replace: true });
+  if (error.value) {
+    errorMessage.value = error.value.data.message;
+  } else {
+    await navigateTo("/activities", { replace: true });
   }
-});
+}
 </script>
