@@ -3,5 +3,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   if (!authStore.user && authStore.token) {
     await authStore.fetchUser();
+    if (!authStore.user) window.location.reload();
   }
 });
