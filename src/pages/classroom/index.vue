@@ -7,12 +7,8 @@
     </PageHeader>
     <Loading v-if="pendingClassrooms || pendingCourses" />
     <ErrorMessage
-      v-else-if="errorClassrooms"
-      :error-message="errorClassrooms.statusMessage"
-    />
-    <ErrorMessage
-      v-else-if="errorCourses"
-      :error-message="errorCourses.statusMessage"
+      v-else-if="errorClassrooms || errorCourses"
+      error-message="Sorry, something went wrong!"
     />
     <div
       v-else-if="classroomStore.classrooms.length > 0"
@@ -84,6 +80,6 @@ async function assignCourses(classroomId, coursesIds) {
 }
 
 async function assignStudents(classroom) {
-  navigateTo(`/classroom/${titleToSlug(classroom.name)}/assign-students`);
+  await navigateTo(`/classroom/${titleToSlug(classroom.name)}/assign-students`);
 }
 </script>

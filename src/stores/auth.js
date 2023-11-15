@@ -18,7 +18,7 @@ export const useAuthStore = defineStore("auth", () => {
       body: payload,
     });
 
-    if (login.status.value === "success") {
+    if (login.data.value) {
       setUser(login.data.value);
       setToken(login.data.value.token);
     }
