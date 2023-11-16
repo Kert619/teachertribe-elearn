@@ -2,13 +2,14 @@
   <div class="flex h-screen">
     <!-- SIDEBAR -->
     <div
-      class="bg-primary-500 h-full w-64 transition-[width] duration-500 overflow-y-auto overflow-x-hidden"
+      class="bg-primary-500 h-full w-64 transition-[width] duration-500 overflow-y-auto overflow-x-hidden shrink-0"
       :class="{ '!w-16': !expanded }"
     >
       <SidebarMain :expanded="expanded" @toggle-expand="toggleExpand" />
     </div>
 
-    <div class="grow flex flex-col h-full">
+    <!-- CONTENT -->
+    <div class="grow flex flex-col h-full overflow-auto">
       <!-- HEADER -->
       <HeaderMain />
 
