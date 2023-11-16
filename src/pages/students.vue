@@ -48,6 +48,38 @@
         </select>
       </div>
     </PageHeader>
+    <Loading v-if="loading" />
+    <div class="overflow-x-auto" v-else-if="selectedPhase">
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th></th>
+            <th>Student Name</th>
+            <th
+              v-for="(level, idx) in selectedPhase.levels"
+              class="text-center"
+            >
+              {{ idx + 1 }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- row 1 -->
+          <tr v-for="(student, idx) in selectedClassroom.students">
+            <th>{{ idx + 1 }}</th>
+            <td>{{ student.name }}</td>
+            <td v-for="(level, idx) in selectedPhase.levels">
+              <div
+                v-if="isLevelPassed(student, level)"
+                class="bg-green-400 border-green-400 border-[1px] p-3"
+              ></div>
+              <div v-else class="border-primary-500 border-[1px] p-3"></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -65,6 +97,9 @@ const phaseId = ref("");
 
 const selectedClassroom = ref(null);
 const selectedCourse = ref(null);
+const selectedPhase = ref(null);
+
+const loading = ref(false);
 
 const {
   data: classrooms,
@@ -84,6 +119,7 @@ watch(classroomId, (newVal) => {
     courseId.value = "";
     phaseId.value = "";
     selectedCourse.value = null;
+    selectedPhase.value = null;
   }
 });
 
@@ -93,6 +129,19 @@ watch(courseId, (newVal) => {
       (x) => x.id == newVal
     );
     phaseId.value = "";
+    selectedPhase.value = null;
   }
 });
+
+watch(phaseId, (newVal) => {
+  if (newVal) {
+    selectedPhase.value = selectedCourse.value.phases.find(
+      (x) => x.id == newVal
+    );
+  }
+});
+
+const isLevelPassed = (student, level) => {
+  return !!student.levels.find((x) => x.id == level.id);
+};
 </script>

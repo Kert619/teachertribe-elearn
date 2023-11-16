@@ -15,16 +15,18 @@ export const useClassroomStore = defineStore("classroom", () => {
   }
 
   async function createClassroom(payload) {
-    const createClassroom = await useApiFetch("/classrooms", {
+    const classroom = await useApiFetch("/classrooms", {
       method: "POST",
       body: payload,
     });
 
-    if (createClassroom.status.value === "success") {
-      classrooms.value.push(createClassroom.data.value);
+    if (classroom.data.value && classrooms.value.length > 0) {
+      classrooms.value.push(classroom.data.value);
+    } else {
+      await getClassrooms();
     }
 
-    return createClassroom;
+    return classroom;
   }
 
   async function assignCourses(payload) {
@@ -66,9 +68,11 @@ export const useClassroomStore = defineStore("classroom", () => {
       { method: "POST", body: payload }
     );
 
-    if (students.data.value) {
+    if (students.data.value && classrooms.value.length > 0) {
       const classroom = classrooms.value.find((x) => x.id === classroomId);
-      classroom.students = toRaw(students.data.value.students);
+      classroom.students = students.data.value.students;
+    } else {
+      await getClassrooms();
     }
 
     return students;
