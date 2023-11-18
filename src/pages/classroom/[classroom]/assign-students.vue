@@ -129,7 +129,7 @@ const initialData = {
       name: "",
       email: "",
       password: "",
-      sendEmail: false,
+      sendEmail: true,
     },
   ],
 };
