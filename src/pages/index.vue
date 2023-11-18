@@ -42,6 +42,7 @@
 </template>
 
 <script setup>
+import * as yup from "yup";
 definePageMeta({
   layout: false,
   middleware: ["logged-in"],
@@ -52,10 +53,10 @@ const authStore = useAuthStore();
 const loading = ref(false);
 const errorMessage = ref(null);
 
-const schema = {
-  email: "required|email",
-  password: "required",
-};
+const schema = yup.object({
+  email: yup.string().required().email().label("Email"),
+  password: yup.string().required().label("Password"),
+});
 
 async function handleSubmit(values) {
   if (loading.value) return;

@@ -34,6 +34,7 @@
 
 <script setup>
 import Swal from "sweetalert2";
+import * as yup from "yup";
 definePageMeta({
   middleware: ["auth"],
 });
@@ -42,9 +43,16 @@ const classroomStore = useClassroomStore();
 
 const loading = ref(false);
 
-const schema = {
-  name: "required|alphaNumSpaces|max:255",
-};
+const schema = yup.object({
+  name: yup
+    .string()
+    .required()
+    .matches(
+      /^[a-zA-Z0-9\s]+$/,
+      "The name must contain only letters, numbers, and spaces."
+    )
+    .label("Name"),
+});
 
 async function createClassroom(values, { setFieldError }) {
   if (loading.value) return;
