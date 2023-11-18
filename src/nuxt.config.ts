@@ -29,7 +29,4 @@ export default defineNuxtConfig({
       watch: { usePolling: true },
     },
   },
-  routeRules: {
-    "/": { prerender: true },
-  },
 });

@@ -21,7 +21,6 @@ export const useApiFetch = (request, options) => {
     headers,
     onResponseError({ request, response, options }) {
       if (response.status === 401) {
-        const authStore = useAuthStore();
         authStore.reset();
       }
     },
