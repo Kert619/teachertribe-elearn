@@ -23,10 +23,9 @@
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
     "@vee-validate/nuxt": "^4.11.7",
-    "@vee-validate/rules": "^4.11.7",
     "@vee-validate/yup": "^4.11.8",
     "pinia": "^2.1.6",
     "simple-code-editor": "^2.0.8",
-    "sweetalert2": "^11.7.31"
+    "sweetalert2": "^11.6.13"
   }
 }
