@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Swal from "sweetalert2";
 import * as yup from "yup";
 definePageMeta({
@@ -54,20 +54,18 @@ const schema = yup.object({
     .label("Name"),
 });
 
-async function createClassroom(values, { setFieldError }) {
+async function createClassroom(values: any) {
   if (loading.value) return;
   loading.value = true;
-  const { status, error } = await classroomStore.createClassroom(values);
+  const { status, error } = await classroomStore.createClassroom(
+    values.name as string
+  );
 
   loading.value = false;
 
   if (error.value) {
-    Object.keys(error.value.data.errors).forEach((x) => {
-      setFieldError(x, error.value.data.errors[x]);
-    });
-  }
-
-  if (status.value === "success") {
+    await Swal.fire("Error!", error.value.data.message, "error");
+  } else {
     await Swal.fire("Saved!", "New classroom has been added.", "success");
     navigateTo("/classroom", { replace: true });
   }

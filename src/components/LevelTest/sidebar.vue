@@ -7,15 +7,9 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  activity: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-});
+<script setup lang="ts">
+const props = defineProps<{
+  activity: string;
+  description: string;
+}>();
 </script>

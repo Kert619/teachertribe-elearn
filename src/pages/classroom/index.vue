@@ -5,9 +5,8 @@
         >Create New</NuxtLink
       >
     </PageHeader>
-    <Loading v-if="pendingClassrooms || pendingCourses" />
     <ErrorMessage
-      v-else-if="errorClassrooms || errorCourses"
+      v-if="errorClassrooms || errorCourses"
       error-message="Sorry, something went wrong!"
     />
     <div
@@ -37,22 +36,10 @@ const courseStore = useCourseStore();
 
 const { titleToSlug } = useSlug();
 
-const {
-  data: classrooms,
-  pending: pendingClassrooms,
-  error: errorClassrooms,
-} = await classroomStore.getClassrooms();
+const { data: classrooms, error: errorClassrooms } =
+  await classroomStore.getClassrooms();
 
-const {
-  data: courses,
-  pending: pendingCourses,
-  error: errorCourses,
-} = await courseStore.getCourses();
-
-watch([classrooms, courses], ([newClassrooms, newCourses]) => {
-  if (newClassrooms) classroomStore.classrooms = newClassrooms;
-  if (newCourses) courseStore.courses = newCourses;
-});
+const { data: courses, error: errorCourses } = await courseStore.getCourses();
 
 async function assignCourses(classroomId, coursesIds) {
   const classroom = classroomStore.classrooms.find((x) => x.id === classroomId);

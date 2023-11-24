@@ -1,10 +1,6 @@
 <template>
   <div class="h-full">
-    <Loading v-if="pending" />
-    <ErrorMessage
-      v-else-if="error"
-      error-message="Sorry, something went wrong!"
-    />
+    <ErrorMessage v-if="error" error-message="Sorry, something went wrong!" />
     <template v-else>
       <div class="h-full flex flex-col">
         <div class="flex flex-wrap gap-3">
@@ -23,7 +19,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   middleware: ["auth", "roles"],
   allowedRoles: ["admin", "teacher", "student"],
@@ -32,8 +28,4 @@ definePageMeta({
 const courseStore = useCourseStore();
 
 const { data: courses, pending, error } = await courseStore.getCourses();
-
-watch(courses, (newCourses) => {
-  courseStore.courses = newCourses;
-});
 </script>

@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout>
-    <NuxtLoadingIndicator :throttle="0" :height="5" color="#0076FF" />
+    <NuxtLoadingIndicator :height="5" />
     <NuxtPage />
   </NuxtLayout>
 </template>

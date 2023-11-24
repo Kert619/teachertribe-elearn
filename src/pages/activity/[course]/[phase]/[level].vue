@@ -1,12 +1,7 @@
 <template>
   <div>
-    <div
-      v-if="pending"
-      class="h-screen w-screen flex justify-center items-center"
-    >
-      <Loading />
-    </div>
-    <div v-else class="h-screen flex flex-col">
+    <ErrorMessage v-if="error" error-message="Sorry, something went wrong!" />
+    <div v-else-if="level" class="h-screen flex flex-col">
       <LevelTestHeader
         :activity-name="level.phase.course.name"
         @toggle-answer="toggleAnswer"
@@ -41,7 +36,7 @@
           class="col-span-12 sm:col-span-3 h-full min-h-[150px] overflow-auto shadow-normal p-3"
         >
           <ClientOnly>
-            <iframe :srcdoc="code" class="h-full w-full" sandbox></iframe>
+            <iframe :srcdoc="code" class="h-full w-full" sandbox=""></iframe>
           </ClientOnly>
         </div>
       </div>
@@ -49,7 +44,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Swal from "sweetalert2";
 definePageMeta({
   layout: false,
@@ -70,10 +65,10 @@ const loadingValidate = ref(false);
 const code = ref("");
 const isReadOnly = ref(false);
 
-const { data: level, pending } = await levelStore.getLevel({
-  course: slugToTitle(route.params.course),
-  phase: slugToTitle(route.params.phase),
-  level: slugToTitle(route.params.level),
+const { data: level, error } = await levelStore.getLevel({
+  course: slugToTitle(route.params.course as string),
+  phase: slugToTitle(route.params.phase as string),
+  level: slugToTitle(route.params.level as string),
 });
 
 if (process.server && !level.value) {
@@ -84,30 +79,22 @@ if (level.value) {
   code.value = level.value.initial_output;
 }
 
-watch(level, (newLevel) => {
-  code.value = newLevel.initial_output;
-});
-
-function toggleAnswer(show) {
+function toggleAnswer(show: boolean) {
   if (show) {
     isReadOnly.value = true;
-    code.value = level.value.expected_output;
+    code.value = level.value!.expected_output;
   } else {
     isReadOnly.value = false;
-    code.value = level.value.initial_output;
+    code.value = level.value!.initial_output;
   }
 }
 
-async function validateCode() {
+async function validateCode(code: string) {
   loadingValidate.value = true;
-  const {
-    data: answer,
-    error,
-    status,
-  } = await levelStore.validateLevel({
-    levelId: level.value.id,
-    userAnswer: code.value,
-    course: level.value.phase.course.name,
+  const { data: answer, error } = await levelStore.validateLevel({
+    levelId: level.value!.id,
+    userAnswer: code,
+    course: level.value!.phase.course.name,
   });
   loadingValidate.value = false;
 
@@ -115,7 +102,7 @@ async function validateCode() {
     await Swal.fire("Error!", "Sorry, something went wrong.", "error");
   }
 
-  if (status.value === "success") {
+  if (answer.value) {
     if (answer.value.is_correct) {
       if (authStore.isStudent) courseStore.refresh = true;
       await Swal.fire(

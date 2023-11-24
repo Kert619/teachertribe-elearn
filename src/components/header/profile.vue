@@ -9,7 +9,7 @@
       tabindex="0"
       class="btn no-animation btn-ghost btn-xs m-1 flex-nowrap"
     >
-      <span class="text-sm">{{ authStore.user?.name }}</span>
+      <span class="text-sm">{{ authStore.user.name }}</span>
       <IconChevronDown class="w-[15px] h-[15px]" />
     </label>
     <ul

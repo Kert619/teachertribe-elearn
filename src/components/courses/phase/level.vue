@@ -19,22 +19,21 @@
   </button>
 </template>
 
-<script setup>
-const emits = defineEmits(["level-select"]);
-const props = defineProps({
-  level: {
-    type: Object,
-    required: true,
-  },
-  index: {
-    type: Number,
-    required: true,
-  },
-});
+<script setup lang="ts">
+import type { BaseLevel } from "@/types/common";
+
+const emits = defineEmits<{
+  (e: "level-select", levelName: string): void;
+}>();
+
+const props = defineProps<{
+  level: BaseLevel;
+  index: number;
+}>();
 
 const authStore = useAuthStore();
 
 function levelSelect() {
-  emits("level-select", props.level);
+  emits("level-select", props.level.name);
 }
 </script>

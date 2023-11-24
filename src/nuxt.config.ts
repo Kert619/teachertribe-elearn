@@ -29,4 +29,7 @@ export default defineNuxtConfig({
       watch: { usePolling: true },
     },
   },
+  typescript: {
+    typeCheck: true,
+  },
 });

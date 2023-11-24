@@ -10,7 +10,7 @@
           :key="level.id"
           :level="level"
           :index="index"
-          @level-select="levelSelect"
+          @level-select="levelSelect(level.name)"
         />
       </div>
     </div>
@@ -28,17 +28,18 @@
   </div>
 </template>
 
-<script setup>
-const emits = defineEmits(["level-select"]);
+<script setup lang="ts">
+import type { Phase } from "@/types/course";
 
-const props = defineProps({
-  phase: {
-    type: Object,
-    required: true,
-  },
-});
+const emits = defineEmits<{
+  (e: "level-select", phaseName: string, levelName: string): void;
+}>();
 
-function levelSelect(level) {
-  emits("level-select", props.phase, level);
+const props = defineProps<{
+  phase: Phase;
+}>();
+
+function levelSelect(levelName: string) {
+  emits("level-select", props.phase.name, levelName);
 }
 </script>

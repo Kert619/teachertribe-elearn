@@ -41,7 +41,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as yup from "yup";
 definePageMeta({
   layout: false,
@@ -51,22 +51,25 @@ definePageMeta({
 const authStore = useAuthStore();
 
 const loading = ref(false);
-const errorMessage = ref(null);
+const errorMessage = ref<string | null>(null);
 
 const schema = yup.object({
   email: yup.string().required().email().label("Email"),
   password: yup.string().required().label("Password"),
 });
 
-async function handleSubmit(values) {
+async function handleSubmit(values: any) {
   if (loading.value) return;
   errorMessage.value = null;
   loading.value = true;
-  const { error } = await authStore.login(values);
+  const { error } = await authStore.login({
+    email: values.email as string,
+    password: values.password as string,
+  });
   loading.value = false;
 
   if (error.value) {
-    errorMessage.value = error.value.data.message;
+    errorMessage.value = error.value.data.message as string;
   } else {
     await navigateTo("/activities", { replace: true });
   }

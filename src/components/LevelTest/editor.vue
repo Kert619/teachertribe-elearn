@@ -29,24 +29,21 @@
   </ClientOnly>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import hljs from "highlight.js";
 import CodeEditor from "simple-code-editor";
 
-const props = defineProps({
-  modelValue: {
-    type: String,
-  },
-  readOnly: {
-    type: Boolean,
-    default: false,
-  },
-  loading: {
-    type: Boolean,
-    required: true,
-  },
-});
-const emits = defineEmits(["update:modelValue", "go-back", "submit-code"]);
+const props = defineProps<{
+  modelValue: string;
+  readOnly: boolean;
+  loading: boolean;
+}>();
+
+const emits = defineEmits<{
+  (e: "update:modelValue", value: string): void;
+  (e: "go-back"): void;
+  (e: "submit-code", code: string): void;
+}>();
 
 const value = computed({
   get() {
@@ -59,7 +56,7 @@ const value = computed({
 
 function submitCode() {
   if (props.loading) return;
-  emits("submit-code");
+  emits("submit-code", value.value);
 }
 
 function goBack() {

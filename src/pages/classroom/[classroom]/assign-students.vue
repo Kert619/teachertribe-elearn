@@ -1,11 +1,7 @@
 <template>
   <div>
-    <Loading v-if="pending" />
-    <ErrorMessage
-      v-else-if="error"
-      error-message="Sorry, someting went wrong!"
-    />
-    <div v-else>
+    <ErrorMessage v-if="error" error-message="Sorry, someting went wrong!" />
+    <div v-else-if="classroom">
       <PageHeader>
         <div class="flex justify-between items-center gap-3">
           <div class="text-sm breadcrumbs">
@@ -112,7 +108,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import * as yup from "yup";
 import Swal from "sweetalert2";
 const route = useRoute();
@@ -148,28 +144,26 @@ const schema = yup.object().shape({
     .strict(),
 });
 
-const {
-  data: classroom,
-  pending,
-  error,
-} = await classroomStore.getClassroom({
-  classroom: slugToTitle(route.params.classroom),
-});
+const { data: classroom, error } = await classroomStore.getClassroom(
+  slugToTitle(route.params.classroom as string)
+);
 
-const handleSubmit = async (values) => {
+if (!classroom.value) {
+  throw createError({ statusCode: 404, statusMessage: "Classroom not found" });
+}
+
+const handleSubmit = async (values: any) => {
   if (loading.value) return;
   loading.value = true;
-  const { data: students, error } = await classroomStore.assignStudents(
-    classroom.value.id,
-    values
-  );
+  const { data: students, error } = await classroomStore.assignStudents({
+    classroomId: classroom.value!.id,
+    students: values.students,
+  });
   loading.value = false;
-
   if (students.value) {
     await Swal.fire("Success!", "New students has been assigned!", "success");
     await navigateTo("/classroom", { replace: true });
   }
-
   if (error.value) {
     await Swal.fire("Error!", error.value.data.message, "error");
   }

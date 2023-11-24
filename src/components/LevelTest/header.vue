@@ -35,14 +35,13 @@
   </div>
 </template>
 
-<script setup>
-const emits = defineEmits(["toggle-answer"]);
-const props = defineProps({
-  activityName: {
-    type: String,
-    required: true,
-  },
-});
+<script setup lang="ts">
+const emits = defineEmits<{
+  (e: "toggle-answer", showAnswer: boolean): void;
+}>();
+const props = defineProps<{
+  activityName: string;
+}>();
 
 const authStore = useAuthStore();
 const showAnswer = ref(false);
