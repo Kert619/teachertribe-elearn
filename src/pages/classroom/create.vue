@@ -57,9 +57,7 @@ const schema = yup.object({
 async function createClassroom(values: any) {
   if (loading.value) return;
   loading.value = true;
-  const { status, error } = await classroomStore.createClassroom(
-    values.name as string
-  );
+  const { error } = await classroomStore.createClassroom(values.name as string);
 
   loading.value = false;
 

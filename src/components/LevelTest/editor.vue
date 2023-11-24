@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import hljs from "highlight.js";
+// import hljs from "highlight.js";
 import CodeEditor from "simple-code-editor";
 
 const props = defineProps<{

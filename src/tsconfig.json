@@ -5,6 +5,9 @@
     "strict": true,
     "noEmitOnError": true,
     "strictNullChecks": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true
   }
 }

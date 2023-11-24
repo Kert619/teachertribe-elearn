@@ -27,5 +27,5 @@ definePageMeta({
 
 const courseStore = useCourseStore();
 
-const { data: courses, pending, error } = await courseStore.getCourses();
+const { data: courses, error } = await courseStore.getCourses();
 </script>

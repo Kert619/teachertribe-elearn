@@ -23,7 +23,7 @@ export function useAPI<T>(request: string, options: UseFetchOptions<T> = {}) {
     watch: false,
     ...options,
     headers,
-    onResponseError({ request, response, options }) {
+    onResponseError({ response }) {
       if (response.status === 401) {
         authStore.reset();
       }

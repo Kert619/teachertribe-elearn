@@ -39,7 +39,8 @@
 const emits = defineEmits<{
   (e: "toggle-answer", showAnswer: boolean): void;
 }>();
-const props = defineProps<{
+
+defineProps<{
   activityName: string;
 }>();
 

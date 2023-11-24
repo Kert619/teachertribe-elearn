@@ -1,6 +1,6 @@
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware((to) => {
   const authStore = useAuthStore();
-  const allowedRoles = (to.meta.allowedRoles as string[]) || [];
+  const allowedRoles = to.meta.allowedRoles as string[];
 
   if (!authStore.user?.roles.some((value) => allowedRoles.includes(value))) {
     throw showError({
