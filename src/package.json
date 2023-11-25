@@ -14,7 +14,9 @@
     "@nuxt/devtools": "latest",
     "autoprefixer": "^10.4.16",
     "daisyui": "^3.8.2",
+    "monaco-editor": "^0.44.0",
     "nuxt": "^3.8.0",
+    "nuxt-monaco-editor": "^1.2.3",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.3.2",
@@ -27,7 +29,6 @@
     "@vee-validate/nuxt": "^4.11.7",
     "@vee-validate/yup": "^4.11.8",
     "pinia": "^2.1.6",
-    "simple-code-editor": "^2.0.8",
     "sweetalert2": "^11.6.13"
   }
 }

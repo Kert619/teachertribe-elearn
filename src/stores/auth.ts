@@ -54,7 +54,7 @@ export const useAuthStore = defineStore("auth", () => {
     token.value = null;
   }
 
-  const isStudent = computed<boolean>(() => {
+  const isStudent = computed(() => {
     if (user.value) {
       return user.value.roles.includes("student");
     }

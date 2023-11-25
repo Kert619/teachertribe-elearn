@@ -10,7 +10,7 @@ export default defineNuxtConfig({
       title: "Teacher Tribe - eLearn",
     },
   },
-  modules: ["@pinia/nuxt", "@vee-validate/nuxt"],
+  modules: ["@pinia/nuxt", "@vee-validate/nuxt", "nuxt-monaco-editor"],
   pinia: {
     autoImports: ["defineStore"],
   },

@@ -2,18 +2,13 @@
   <ClientOnly>
     <div class="h-full flex flex-col">
       <div class="h-full overflow-auto">
-        <CodeEditor
-          theme="night-owl"
-          width="100%"
-          height="100%"
-          border-radius="0"
-          :line-nums="true"
-          :copy-code="false"
-          :read-only="readOnly"
-          :languages="[['html', 'HTML']]"
-          v-model="value"
-          autofocus
-        ></CodeEditor>
+        <MonacoEditor
+          class="h-full w-full"
+          v-model="code"
+          lang="html"
+          theme="vs-dark"
+          :options="MONACO_EDITOR_OPTIONS"
+        />
       </div>
       <div class="px-3 py-2 flex justify-between gap-3">
         <button class="btn btn-sm btn-error" @click="goBack">Go Back</button>
@@ -30,8 +25,7 @@
 </template>
 
 <script setup lang="ts">
-// import hljs from "highlight.js";
-import CodeEditor from "simple-code-editor";
+import * as monaco from "monaco-editor";
 
 const props = defineProps<{
   modelValue: string;
@@ -39,13 +33,28 @@ const props = defineProps<{
   loading: boolean;
 }>();
 
+const MONACO_EDITOR_OPTIONS =
+  computed<monaco.editor.IStandaloneEditorConstructionOptions>(() => {
+    return {
+      automaticLayout: true,
+      formatOnType: true,
+      formatOnPaste: true,
+      padding: { top: 20, bottom: 20 },
+      fontSize: 18,
+      suggestFontSize: 14,
+      wordWrap: "on",
+      colorDecorators: true,
+      readOnly: props.readOnly,
+    };
+  });
+
 const emits = defineEmits<{
   (e: "update:modelValue", value: string): void;
   (e: "go-back"): void;
   (e: "submit-code", code: string): void;
 }>();
 
-const value = computed({
+const code = computed({
   get() {
     return props.modelValue;
   },
@@ -56,7 +65,7 @@ const value = computed({
 
 function submitCode() {
   if (props.loading) return;
-  emits("submit-code", value.value);
+  emits("submit-code", code.value);
 }
 
 function goBack() {
