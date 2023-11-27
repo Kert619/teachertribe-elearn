@@ -1,6 +1,11 @@
 <template>
   <div>
-    <ErrorMessage v-if="error" error-message="Sorry, something went wrong!" />
+    <div
+      v-if="pending"
+      class="h-screen w-screen flex justify-center items-center"
+    >
+      <Loading />
+    </div>
     <div v-else-if="level" class="h-screen flex flex-col">
       <LevelTestHeader
         :activity-name="level.phase.course.name"
@@ -46,6 +51,7 @@
 
 <script setup lang="ts">
 import Swal from "sweetalert2";
+
 definePageMeta({
   layout: false,
   middleware: ["auth", "roles"],
@@ -60,15 +66,19 @@ const authStore = useAuthStore();
 
 const { slugToTitle } = useSlug();
 
+const courseName = slugToTitle(route.params.course as string);
+const phaseName = slugToTitle(route.params.phase as string);
+const levelName = slugToTitle(route.params.level as string);
+
 const loadingValidate = ref(false);
 
 const code = ref("");
 const isReadOnly = ref(false);
 
-const { data: level, error } = await levelStore.getLevel({
-  course: slugToTitle(route.params.course as string),
-  phase: slugToTitle(route.params.phase as string),
-  level: slugToTitle(route.params.level as string),
+const { data: level, pending } = await levelStore.getLevel({
+  course: courseName,
+  phase: phaseName,
+  level: levelName,
 });
 
 if (process.server && !level.value) {
@@ -78,6 +88,10 @@ if (process.server && !level.value) {
 if (level.value) {
   code.value = level.value.initial_output;
 }
+
+watch(level, (newLevel) => {
+  if (newLevel) code.value = newLevel.initial_output;
+});
 
 function toggleAnswer(show: boolean) {
   if (show) {

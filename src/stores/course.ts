@@ -7,6 +7,7 @@ export const useCourseStore = defineStore("course", () => {
   async function getCourses() {
     const nuxtApp = useNuxtApp();
     const coursesData = await useAPI<Course[]>("/courses", {
+      lazy: true,
       key: "courses",
       getCachedData: (key) =>
         nuxtApp.payload.data[key] || nuxtApp.static.data[key],

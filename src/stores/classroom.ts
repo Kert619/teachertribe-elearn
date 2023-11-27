@@ -10,6 +10,7 @@ export const useClassroomStore = defineStore("classroom", () => {
   async function getClassrooms() {
     const nuxtApp = useNuxtApp();
     const classroomsData = await useAPI<Classroom[]>("/classrooms", {
+      lazy: true,
       key: "classrooms",
       getCachedData: (key) =>
         nuxtApp.payload.data[key] || nuxtApp.static.data[key],
@@ -63,6 +64,7 @@ export const useClassroomStore = defineStore("classroom", () => {
   async function getClassroom(classroom: string) {
     const nuxtApp = useNuxtApp();
     const classroomData = await useAPI<Classroom>("/classrooms/get-by-name", {
+      lazy: true,
       query: { classroom },
       key: `classroom-${classroom}`,
       getCachedData: (key) =>

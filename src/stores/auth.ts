@@ -6,6 +6,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function fetchUser() {
     const { data } = await useAPI<User>("/me", {
+      lazy: true,
       transform: (data: any) => ({
         id: data.data.user.id as string,
         name: data.data.user.name as string,

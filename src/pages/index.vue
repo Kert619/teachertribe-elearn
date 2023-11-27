@@ -49,6 +49,7 @@ definePageMeta({
 });
 
 const authStore = useAuthStore();
+const route = useRoute();
 
 const loading = ref(false);
 const errorMessage = ref<string | null>(null);
@@ -71,7 +72,13 @@ async function handleSubmit(values: any) {
   if (error.value) {
     errorMessage.value = error.value.data.message as string;
   } else {
-    await navigateTo("/activities", { replace: true });
+    const redirect: string | undefined = route.query.redirect as string;
+
+    if (redirect) {
+      await navigateTo(redirect, { replace: true });
+    } else {
+      await navigateTo("/activities", { replace: true });
+    }
   }
 }
 </script>

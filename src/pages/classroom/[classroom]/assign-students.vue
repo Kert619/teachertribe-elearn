@@ -1,6 +1,10 @@
 <template>
   <div>
-    <ErrorMessage v-if="error" error-message="Sorry, someting went wrong!" />
+    <Loading v-if="pending" />
+    <ErrorMessage
+      v-else-if="error"
+      error-message="Sorry, someting went wrong!"
+    />
     <div v-else-if="classroom">
       <PageHeader>
         <div class="flex justify-between items-center gap-3">
@@ -144,11 +148,15 @@ const schema = yup.object().shape({
     .strict(),
 });
 
-const { data: classroom, error } = await classroomStore.getClassroom(
+const {
+  data: classroom,
+  pending,
+  error,
+} = await classroomStore.getClassroom(
   slugToTitle(route.params.classroom as string)
 );
 
-if (!classroom.value) {
+if (process.server && !classroom.value) {
   throw createError({ statusCode: 404, statusMessage: "Classroom not found" });
 }
 

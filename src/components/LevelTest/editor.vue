@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import * as monaco from "monaco-editor";
+import { editor } from "monaco-editor";
 
 const props = defineProps<{
   modelValue: string;
@@ -34,15 +34,15 @@ const props = defineProps<{
 }>();
 
 const MONACO_EDITOR_OPTIONS =
-  computed<monaco.editor.IStandaloneEditorConstructionOptions>(() => {
+  computed<editor.IStandaloneEditorConstructionOptions>(() => {
     return {
+      theme: "vs-dark",
       automaticLayout: true,
       formatOnType: true,
       formatOnPaste: true,
       padding: { top: 20, bottom: 20 },
       fontSize: 18,
       suggestFontSize: 14,
-      wordWrap: "on",
       colorDecorators: true,
       readOnly: props.readOnly,
     };

@@ -5,12 +5,13 @@
         >Create New</NuxtLink
       >
     </PageHeader>
+    <Loading v-if="classroomPending || coursePending || loading" />
     <ErrorMessage
-      v-if="errorClassrooms || errorCourses"
+      v-else-if="errorClassrooms || errorCourses"
       error-message="Sorry, something went wrong!"
     />
     <div
-      v-else-if="classroomStore.classrooms.length > 0"
+      v-else-if="classroomStore.classrooms"
       class="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
     >
       <ClassroomCard
@@ -29,35 +30,45 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Swal from "sweetalert2";
+import type { AssignCourses } from "@/types/classroom";
+
 const classroomStore = useClassroomStore();
 const courseStore = useCourseStore();
 
+const loading = ref(false);
+
 const { titleToSlug } = useSlug();
 
-const { data: classrooms, error: errorClassrooms } =
-  await classroomStore.getClassrooms();
+const {
+  data: classrooms,
+  pending: classroomPending,
+  error: errorClassrooms,
+} = await classroomStore.getClassrooms();
 
-const { data: courses, error: errorCourses } = await courseStore.getCourses();
+const {
+  data: courses,
+  pending: coursePending,
+  error: errorCourses,
+} = await courseStore.getCourses();
 
-async function assignCourses(classroomId, coursesIds) {
-  const classroom = classroomStore.classrooms.find((x) => x.id === classroomId);
-  classroom.loading = true;
+watch([classrooms, courses], ([newClassroom, newCourses]) => {
+  if (newClassroom) classroomStore.classrooms = newClassroom;
+  if (newCourses) courseStore.courses = newCourses;
+});
 
-  const { status, error } = await classroomStore.assignCourses({
-    classroomId,
-    coursesIds,
-  });
-
-  classroom.loading = false;
+async function assignCourses(assignCourses: AssignCourses) {
+  loading.value = true;
+  const { status, error } = await classroomStore.assignCourses(assignCourses);
 
   if (error.value) {
-    console.error(error);
+    loading.value = false;
     await Swal.fire("Error!", "Sorry something went wrong.", "error");
   }
 
   if (status.value === "success") {
+    loading.value = false;
     await Swal.fire(
       "Success!",
       "New course has been added to the class.",
@@ -66,7 +77,7 @@ async function assignCourses(classroomId, coursesIds) {
   }
 }
 
-async function assignStudents(classroom) {
-  await navigateTo(`/classroom/${titleToSlug(classroom.name)}/assign-students`);
+async function assignStudents(classroomName: string) {
+  await navigateTo(`/classroom/${titleToSlug(classroomName)}/assign-students`);
 }
 </script>

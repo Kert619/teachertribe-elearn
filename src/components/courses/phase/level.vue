@@ -1,15 +1,17 @@
 <template>
-  <button
+  <NuxtLink
     v-if="level.is_unlocked"
+    :to="`/activity/${titleToSlug(courseName)}/${titleToSlug(
+      phaseName
+    )}/${titleToSlug(level.name)}`"
     class="btn btn-primary btn-block no-animation rounded-none"
     :class="{
       'btn-outline': !authStore.isStudent || !level.is_passed,
       '!btn-success': level.is_passed && authStore.isStudent,
     }"
-    @click="levelSelect"
   >
     {{ index + 1 }}
-  </button>
+  </NuxtLink>
 
   <button
     v-else
@@ -26,14 +28,14 @@ const emits = defineEmits<{
   (e: "level-select", levelName: string): void;
 }>();
 
-const props = defineProps<{
+const { titleToSlug } = useSlug();
+
+defineProps<{
+  courseName: string;
+  phaseName: string;
   level: BaseLevel;
   index: number;
 }>();
 
 const authStore = useAuthStore();
-
-function levelSelect() {
-  emits("level-select", props.level.name);
-}
 </script>

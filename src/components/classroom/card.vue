@@ -5,10 +5,6 @@
     >
       <span v-if="isAssignedCourses">Select Courses</span>
       <span v-else>{{ classroom.name }}</span>
-      <span
-        v-if="classroom.loading"
-        class="loading loading-spinner loading-sm"
-      ></span>
     </h1>
     <div class="p-3">
       <template v-if="!isAssignedCourses">
@@ -56,7 +52,10 @@
                   :checked="isCourseSelected(course)"
                   :disabled="isCourseSelected(course)"
                   @change="
-                    setSelectedCoursesId($event.target.checked, course.id)
+                    setSelectedCoursesId(
+                      $event.target as HTMLInputElement,
+                      course.id
+                    )
                   "
                 />
               </label>
@@ -105,28 +104,28 @@
   </div>
 </template>
 
-<script setup>
-const emits = defineEmits(["assign-courses", "assign-students"]);
-const props = defineProps({
-  classroom: {
-    type: Object,
-    required: true,
-  },
-  courses: {
-    type: Array,
-    required: true,
-  },
-});
+<script setup lang="ts">
+import type { Classroom, Course, AssignCourses } from "@/types/classroom";
+
+const emits = defineEmits<{
+  (e: "assign-courses", assignCourses: AssignCourses): void;
+  (e: "assign-students", classroomName: string): void;
+}>();
+
+const props = defineProps<{
+  classroom: Classroom;
+  courses: Course[];
+}>();
 
 const isAssignedCourses = ref(false);
-const selectedCoursesIds = ref([]);
+const selectedCoursesIds = ref<string[]>([]);
 
-function isCourseSelected(course) {
+function isCourseSelected(course: Course) {
   return !!props.classroom.courses.find((x) => x.id === course.id);
 }
 
-function setSelectedCoursesId(value, courseId) {
-  if (value) {
+function setSelectedCoursesId(value: HTMLInputElement, courseId: string) {
+  if (value.checked) {
     selectedCoursesIds.value.push(courseId);
   } else {
     const index = selectedCoursesIds.value.findIndex((x) => x === courseId);
@@ -136,13 +135,15 @@ function setSelectedCoursesId(value, courseId) {
 
 function assignCourses() {
   if (selectedCoursesIds.value.length === 0) return;
-  if (props.classroom.loading) return;
-  emits("assign-courses", props.classroom.id, selectedCoursesIds.value);
+  emits("assign-courses", {
+    classroomId: props.classroom.id,
+    coursesIds: selectedCoursesIds.value,
+  });
   isAssignedCourses.value = false;
 }
 
 function assignStudents() {
-  emits("assign-students", props.classroom);
+  emits("assign-students", props.classroom.name);
 }
 
 watch(isAssignedCourses, () => (selectedCoursesIds.value = []));

@@ -1,6 +1,10 @@
 <template>
   <div class="h-full">
-    <ErrorMessage v-if="error" error-message="Sorry, something went wrong!" />
+    <Loading v-if="pending" />
+    <ErrorMessage
+      v-else-if="error"
+      error-message="Sorry, something went wrong!"
+    />
     <template v-else>
       <div class="h-full flex flex-col">
         <div class="flex flex-wrap gap-3">
@@ -27,5 +31,9 @@ definePageMeta({
 
 const courseStore = useCourseStore();
 
-const { data: courses, error } = await courseStore.getCourses();
+const { data: courses, pending, error } = await courseStore.getCourses();
+
+watch(courses, async (newCourses) => {
+  if (newCourses) courseStore.courses = newCourses;
+});
 </script>

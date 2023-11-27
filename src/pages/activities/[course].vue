@@ -7,7 +7,7 @@
     />
     <div v-else-if="course">
       <div v-for="phase in course.phases" :key="phase.id">
-        <CoursesPhase :phase="phase" @level-select="levelSelect" />
+        <CoursesPhase :phase="phase" :courseName="courseName" />
       </div>
     </div>
   </div>
@@ -16,7 +16,7 @@
 <script setup lang="ts">
 const route = useRoute();
 
-const { slugToTitle, titleToSlug } = useSlug();
+const { slugToTitle } = useSlug();
 
 const courseStore = useCourseStore();
 
@@ -32,12 +32,5 @@ const {
 
 if (process.server && !course.value) {
   throw createError({ statusCode: 404, statusMessage: "Course not found" });
-}
-
-async function levelSelect(phase: string, level: string) {
-  const phaseName = titleToSlug(phase);
-  const levelName = titleToSlug(level);
-
-  await navigateTo(`/activity/${courseName}/${phaseName}/${levelName}`);
 }
 </script>

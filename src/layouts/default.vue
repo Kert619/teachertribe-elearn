@@ -22,13 +22,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const expanded = ref(true);
 const authStore = useAuthStore();
 
 const isStudent = authStore.isStudent;
 
-function toggleExpand(value) {
+function toggleExpand(value: boolean) {
   expanded.value = !value;
 }
 </script>

@@ -7,6 +7,7 @@ export const useLevelStore = defineStore("level", () => {
     level: string;
   }) {
     const level = await useAPI<Level>("/levels/get-by-course-phase-level", {
+      lazy: true,
       key: `${payload.course}-${payload.phase}-${payload.level}`,
       query: payload,
       transform: (data: any) => data.data as Level,

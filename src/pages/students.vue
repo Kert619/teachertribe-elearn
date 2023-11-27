@@ -5,7 +5,7 @@
       v-else-if="error"
       error-message="Sorry, something went wrong!"
     />
-    <div v-else>
+    <div v-else-if="classroomStore.classrooms">
       <PageHeader>
         <div class="flex flex-wrap gap-3">
           <select
@@ -72,7 +72,7 @@
               <th class="border border-gray-300">#</th>
               <th class="border border-gray-300">Student Name</th>
               <th
-                v-for="(level, idx) in selectedPhase.levels"
+                v-for="(_, idx) in selectedPhase.levels"
                 class="text-center border border-gray-300"
               >
                 {{ idx + 1 }}
@@ -81,15 +81,15 @@
           </thead>
           <tbody>
             <!-- row 1 -->
-            <tr v-for="(student, idx) in selectedClassroom.students">
+            <tr v-for="(student, idx) in selectedClassroom!.students">
               <th class="border border-gray-300">{{ idx + 1 }}</th>
               <td class="border border-gray-300">{{ student.name }}</td>
               <td
                 class="border border-gray-300"
-                v-for="(level, idx) in selectedPhase.levels"
+                v-for="level in selectedPhase.levels"
               >
                 <div
-                  v-if="isLevelPassed(student, level)"
+                  v-if="isLevelPassed(student, level.id)"
                   class="bg-green-400 p-3"
                 ></div>
                 <div v-else class="bg-gray-300 p-3"></div>
@@ -102,7 +102,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Classroom, Course, Phase, Student } from "@/types/classroom";
+
 definePageMeta({
   middleware: ["auth", "roles"],
   allowedRoles: ["admin", "teacher"],
@@ -114,11 +116,9 @@ const classroomId = ref("");
 const courseId = ref("");
 const phaseId = ref("");
 
-const selectedClassroom = ref(null);
-const selectedCourse = ref(null);
-const selectedPhase = ref(null);
-
-const loading = ref(false);
+const selectedClassroom = ref<Classroom | null>(null);
+const selectedCourse = ref<Course | null>(null);
+const selectedPhase = ref<Phase | null>(null);
 
 const {
   data: classrooms,
@@ -126,15 +126,15 @@ const {
   error,
 } = await classroomStore.getClassrooms();
 
-watch(classrooms, (newVal) => {
-  if (newVal) classroomStore.classrooms = newVal;
+watch(classrooms, (newClassrooms) => {
+  if (newClassrooms) classroomStore.classrooms = newClassrooms;
 });
 
 watch(classroomId, (newVal) => {
   if (newVal) {
     selectedClassroom.value = classroomStore.classrooms.find(
-      (x) => x.id == classroomId.value
-    );
+      (x) => x.id == newVal
+    )!;
     courseId.value = "";
     phaseId.value = "";
     selectedCourse.value = null;
@@ -144,9 +144,9 @@ watch(classroomId, (newVal) => {
 
 watch(courseId, (newVal) => {
   if (newVal) {
-    selectedCourse.value = selectedClassroom.value.courses.find(
+    selectedCourse.value = selectedClassroom.value!.courses.find(
       (x) => x.id == newVal
-    );
+    )!;
     phaseId.value = "";
     selectedPhase.value = null;
   }
@@ -154,13 +154,13 @@ watch(courseId, (newVal) => {
 
 watch(phaseId, (newVal) => {
   if (newVal) {
-    selectedPhase.value = selectedCourse.value.phases.find(
+    selectedPhase.value = selectedCourse.value!.phases.find(
       (x) => x.id == newVal
-    );
+    )!;
   }
 });
 
-const isLevelPassed = (student, level) => {
-  return !!student.levels.find((x) => x.id == level.id);
+const isLevelPassed = (student: Student, level: string) => {
+  return !!student.levels.find((x) => x.id == level);
 };
 </script>

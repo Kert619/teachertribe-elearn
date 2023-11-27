@@ -9,8 +9,9 @@
           v-for="(level, index) in phase.levels"
           :key="level.id"
           :level="level"
+          :phaseName="phase.name"
+          :courseName="courseName"
           :index="index"
-          @level-select="levelSelect(level.name)"
         />
       </div>
     </div>
@@ -31,15 +32,8 @@
 <script setup lang="ts">
 import type { Phase } from "@/types/course";
 
-const emits = defineEmits<{
-  (e: "level-select", phaseName: string, levelName: string): void;
-}>();
-
-const props = defineProps<{
+defineProps<{
+  courseName: string;
   phase: Phase;
 }>();
-
-function levelSelect(levelName: string) {
-  emits("level-select", props.phase.name, levelName);
-}
 </script>
